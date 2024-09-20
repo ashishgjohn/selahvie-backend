@@ -1,0 +1,21 @@
+{
+  "name": "bible-extension-backend",
+  "version": "1.0.0",
+  "description": "SelahVie is a Chrome extension that brings you personalized Bible verses to uplift your spirit and soothe your soul",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Bible",
+    "Selviah"
+  ],
+  "author": "Anubhav Shavaran",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongodb": "^6.9.0",
+    "mongoose": "^8.6.3"
+  }
+}
