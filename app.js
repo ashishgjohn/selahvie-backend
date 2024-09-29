@@ -1,7 +1,7 @@
 import express from 'express';
 import { router as versesRouter } from './routes/versesRoute.js';
 import cors from 'cors';
-import AppError from "./appError";
+import AppError from "./utils/appError.js";
 
 const app = express();
 
