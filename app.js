@@ -13,6 +13,8 @@ app.use(cors({
 
 app.use(express.json({ limit: '10kb' }));
 
+app.use('/api/verses', versesRouter);
+
 app.use('/', (req, res, next) => {
     res.status(200).json({
         status: 'success',
@@ -20,7 +22,6 @@ app.use('/', (req, res, next) => {
     });
 });
 
-app.use('/api/verses', versesRouter);
 
 app.all("*", (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on the server.`, '404'));
