@@ -1,7 +1,9 @@
 import express from 'express';
 import { router as versesRouter } from './routes/versesRoute.js';
+import { router as imagesRouter } from './routes/imagesRoute.js';
 import cors from 'cors';
 import AppError from "./utils/appError.js";
+import path from 'path';
 
 const app = express();
 
@@ -14,6 +16,9 @@ app.use(cors({
 app.use(express.json({ limit: '10kb' }));
 
 app.use('/api/verses', versesRouter);
+app.use('/api/images', imagesRouter);
+
+app.use('/imgs', express.static(path.join('imgs')));
 
 app.use('/', (req, res, next) => {
     res.status(200).json({
