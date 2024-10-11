@@ -13,9 +13,16 @@ const getAllVerses = catchAsync(async (req, res, next) => {
 });
 
 const getVersesWithScore = catchAsync(async (req, res, next) => {
-    console.log(req.params.score)
+    const { score } = req.params;
     const verses = await Verse.find({
-        score: Number(req.params.score)
+        $and: [
+            {
+                score: { $gte: score - 2 }
+            },
+            {
+                score: { $lte: score + 2 }
+            }
+        ]
     });
 
     res.status(200).json({
