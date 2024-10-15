@@ -17,10 +17,10 @@ const getVersesWithScore = catchAsync(async (req, res, next) => {
     const verses = await Verse.find({
         $and: [
             {
-                score: { $gte: score - 2 }
+                score: { $gte: Number(score) - 2 }
             },
             {
-                score: { $lte: score + 2 }
+                score: { $lte: Number(score) + 2 }
             }
         ]
     });
