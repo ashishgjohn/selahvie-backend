@@ -4,7 +4,7 @@ import { app } from "./app.js";
 
 configDotenv();
 
-const DB = process.env.DATABASE_LOCAL ?? '';
+const DB = process.env.DATABASE ?? '';
 const DBNAME = process.env.DATABASE_NAME ?? '';
 const PORT = process.env.PORT;
 
