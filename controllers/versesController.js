@@ -1,4 +1,5 @@
 import Verse from "../models/verseModel.js";
+import Image from "../models/imageModel.js";
 import catchAsync from "../utils/catchAsync.js";
 
 const getAllVerses = catchAsync(async (req, res, next) => {
@@ -24,7 +25,14 @@ const getVersesWithScore = catchAsync(async (req, res, next) => {
             }
         ]
     });
-    const images = await Image.aggregate([{ $sample: { size: 5 } }]);
+    let images = await Image.aggregate([{ $sample: { size: 5 } }]);
+    const baseUrl = `${req.protocol}://${req.get('host')}`;
+    images = images.map((img) => {
+        return {
+            ...img,
+            name: `${baseUrl}/imgs/bgs/${img.name}`,
+        }
+    });
 
     res.status(200).json({
         status: 'success',
