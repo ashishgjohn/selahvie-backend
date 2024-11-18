@@ -23,12 +23,14 @@ function wrapText(font, text, maxWidth) {
 }
 
 const getImageWithVerse = catchAsync(async (req, res, next) => {
+    
     try {
-        const imagePath = path.join('imgs', 'bgImage.png');
+        const { text, image: bgImage } = req.query;
+        const imagePath = path.join('imgs/bgs', bgImage);
         const font = await loadFont(SANS_32_WHITE);
 
         const image = await Jimp.read(imagePath);
-        const text = req.query.text || "Selahvie";
+        text = text || "Selahvie";
 
         const imageWidth = image.bitmap.width;
         const imageHeight = image.bitmap.height;
