@@ -1,7 +1,7 @@
 import catchAsync from "../utils/catchAsync.js";
 import path from 'path';
 import { Jimp, loadFont, measureText, measureTextHeight, HorizontalAlign } from 'jimp';
-import { SANS_32_WHITE } from "jimp/fonts";
+import { SANS_16_WHITE } from "jimp/fonts";
 
 function wrapText(font, text, maxWidth) {
     const words = text.split(' ');
@@ -26,13 +26,23 @@ const getImageWithVerse = catchAsync(async (req, res, next) => {
     try {
         const { text: verseText, image: bgImage } = req.query;
         const imagePath = path.join('imgs/bgs', bgImage);
-        const font = await loadFont(SANS_32_WHITE);
+        const font = await loadFont(SANS_16_WHITE);
 
         const image = await Jimp.read(imagePath);
         const text = verseText || "Selahvie";
 
-        const imageWidth = image.bitmap.width;
-        const imageHeight = image.bitmap.height;
+        const facebookAspectRatio = 2.91;
+        const cropHeight = Math.round(image.bitmap.width / facebookAspectRatio);
+
+        const croppedImage = image.crop({
+            x: 0,
+            y: Math.max(0, (image.bitmap.height - cropHeight) / 2),
+            w: image.bitmap.width,
+            h: 350
+        });
+
+        const imageWidth = croppedImage.bitmap.width;
+        const imageHeight = croppedImage.bitmap.height;
 
         const textBackgroundHeight = 100;
         const textImage = new Jimp({ width: imageWidth, height: textBackgroundHeight, color: '#00000059' });
@@ -47,14 +57,14 @@ const getImageWithVerse = catchAsync(async (req, res, next) => {
                 text: wrappedText,
                 alignmentX: HorizontalAlign.CENTER,
             },
-            maxWidth: maxTextWidth
+            maxWidth: maxTextWidth,
         });
 
         const finalImageHeight = imageHeight + textBackgroundHeight;
         const finalImage = new Jimp({ width: imageWidth, height: finalImageHeight, color: '#00000059' });
 
         finalImage
-            .composite(image, 0, 0)
+            .composite(croppedImage, 0, 0)
             .composite(textImage, 0, imageHeight);
 
         const outputImageName = `output-${Date.now()}.png`;
@@ -65,7 +75,7 @@ const getImageWithVerse = catchAsync(async (req, res, next) => {
 
         res.status(200).json({
             status: 'success',
-            imageUrl
+            imageUrl,
         });
     } catch (err) {
         console.log(err);
