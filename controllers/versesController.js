@@ -26,7 +26,7 @@ const getVersesWithScore = catchAsync(async (req, res, next) => {
         ]
     });
     let images = await Image.aggregate([{ $sample: { size: 10 } }]);
-    const baseUrl = `https://${req.get('host')}`;
+    const baseUrl = `${req.protocol}://${req.get('host')}`;
     images = images.map((img) => {
         return {
             ...img,
