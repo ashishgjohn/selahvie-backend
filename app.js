@@ -8,10 +8,22 @@ import path from 'path';
 
 const app = express();
 
+const allowedOrigins = [
+    'https://selahvie.life', // Your main app
+    'https://api.selahvie.life' // Your backend, if accessed directly
+];
+
 app.use(cors({
-    origin: '*',
-    methods: ['GET', 'POST'],
-    credentials: true
+    origin: function (origin, callback) {
+        // Allow requests with no origin (e.g., mobile apps, Postman) or check against allowed origins
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: ['GET', 'POST'], // Only allow these HTTP methods
+    credentials: true // Allow credentials (e.g., cookies, Authorization headers)
 }));
 
 app.use(express.json({ limit: '10kb' }));
