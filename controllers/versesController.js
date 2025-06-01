@@ -25,12 +25,29 @@ const getVersesWithScore = catchAsync(async (req, res, next) => {
             }
         ]
     });
-   res.status(200).json({
+
+    // Get a random image using the same method as randomImageController
+    const images = await Image.aggregate([{ $sample: { size: 1 } }]);
+    const baseUrl = `https://${req.get('host')}`;
+    const imageWithUrl = {
+        ...images[0],
+        name: `${baseUrl}/imgs/bgs/${images[0].name}`,
+    };
+
+    res.status(200).json({
         status: 'success',
         data: {
-            images
+            verses,
+            images: imageWithUrl  // Now 'images' is defined with actual data
         }
     });
+
+    //res.status(200).json({
+    //    status: 'success',
+    //    data: {
+    //        images
+    //    }
+    //});
 });
 
 export { getAllVerses, getVersesWithScore };
