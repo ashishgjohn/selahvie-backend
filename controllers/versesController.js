@@ -42,7 +42,7 @@ const getVersesWithScore = catchAsync(async (req, res, next) => {
         status: 'success',
         data: {
             verses,
-            images: imageWithUrl  // Now 'images' is defined with actual data
+            images: [imageWithUrl]  // Now 'images' is defined with actual data and sent as an array
         }
     });
 
