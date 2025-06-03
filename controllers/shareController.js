@@ -6,6 +6,8 @@ const handleShare = catchAsync(async (req, res, next) => {
     const reference = escape(req.query.reference || '');
     const imageUrl = escape(req.query.imageUrl || '');
     
+    console.log(verse, reference, imageUrl);
+    
     // If someone visits directly without parameters
     if (!verse || !reference || !imageUrl) {
         return res.redirect('https://selahvie.life');
