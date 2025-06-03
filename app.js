@@ -2,6 +2,7 @@ import express from 'express';
 import { router as versesRouter } from './routes/versesRoute.js';
 import { router as imagesRouter } from './routes/imagesRoute.js';
 import { router as randomImageRouter } from './routes/randomImageRoute.js';
+import { router as shareRouter } from './routes/shareRoute.js';
 import cors from 'cors';
 import AppError from "./utils/appError.js";
 import path from 'path';
@@ -31,7 +32,7 @@ app.use(express.json({ limit: '10kb' }));
 app.use('/api/verses', versesRouter);
 app.use('/api/images', imagesRouter);
 app.use('/api/random', randomImageRouter);
-
+app.use('/api/share', shareRouter);
 app.use('/imgs', express.static(path.join('imgs')));
 
 app.use('/', (req, res, next) => {
