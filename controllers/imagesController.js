@@ -71,7 +71,7 @@ const getImageWithVerse = catchAsync(async (req, res, next) => {
         const outputImagePath = path.join('imgs', outputImageName);
 
         await finalImage.write(outputImagePath);
-        const imageUrl = `https://selahvie.life/imgs/${outputImageName}`;
+        const imageUrl = `https://${req.get('host')}/imgs/${outputImageName}`;
 
         res.status(200).json({
             status: 'success',
