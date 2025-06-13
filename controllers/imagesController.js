@@ -1,76 +1,60 @@
 import catchAsync from "../utils/catchAsync.js";
 import path from 'path';
-import { Jimp, loadFont, measureText, measureTextHeight, HorizontalAlign } from 'jimp';
-import { SANS_16_WHITE } from "jimp/fonts";
-
-function wrapText(font, text, maxWidth) {
-    const words = text.split(' ');
-    let lines = [];
-    let currentLine = words[0];
-
-    words.slice(1).forEach(word => {
-        const width = measureText(font, currentLine + ' ' + word);
-        if (width < maxWidth) {
-            currentLine += ' ' + word;
-        } else {
-            lines.push(currentLine);
-            currentLine = word;
-        }
-    });
-    lines.push(currentLine);
-
-    return lines.join('\n');
-}
+import fs from 'fs/promises';
+import puppeteer from 'puppeteer';
 
 const getImageWithVerse = catchAsync(async (req, res, next) => {
     try {
-        const { text: verseText, image: bgImage } = req.query;
-        const imagePath = path.join('imgs/bgs', bgImage);
-        const font = await loadFont(SANS_16_WHITE);
+        const { text: verseText, reference: verseReference, image: bgImage } = req.query;
+        
+        if (!verseText || !bgImage) {
+            return res.status(400).json({
+                status: 'failure',
+                message: 'Missing required parameters: text and image'
+            });
+        }
 
-        const image = await Jimp.read(imagePath);
-        const text = verseText || "Selahvie";
+        // Read the HTML template
+        const templatePath = path.join('templates', 'facebook-share-template.html');
+        let htmlTemplate = await fs.readFile(templatePath, 'utf8');
 
-        const facebookAspectRatio = 2.91;
-        const cropHeight = Math.round(image.bitmap.width / facebookAspectRatio);
+        // Replace placeholders with actual data
+        const backgroundImageUrl = `https://${req.get('host')}/imgs/bgs/${bgImage}`;
+        const logoUrl = `https://${req.get('host')}/imgs/SelahvieLogo.webp`; // Adjust path if needed
+        
+        htmlTemplate = htmlTemplate
+            .replace('{{BACKGROUND_IMAGE}}', backgroundImageUrl)
+            .replace('{{LOGO_URL}}', logoUrl)
+            .replace('{{VERSE_REFERENCE}}', verseReference || '')
+            .replace('{{VERSE_TEXT}}', verseText);
 
-        const croppedImage = image.crop({
-            x: 0,
-            y: Math.max(0, (image.bitmap.height - cropHeight) / 2),
-            w: image.bitmap.width,
-            h: 350
+        // Launch Puppeteer and generate screenshot
+        const browser = await puppeteer.launch({
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
 
-        const imageWidth = croppedImage.bitmap.width;
-        const imageHeight = croppedImage.bitmap.height;
-
-        const textBackgroundHeight = 100;
-        const textImage = new Jimp({ width: imageWidth, height: textBackgroundHeight, color: '#00000059' });
-        const maxTextWidth = imageWidth - 2 * 20;
-
-        const wrappedText = measureText(font, text) > maxTextWidth ? wrapText(font, text, maxTextWidth) : text;
-        textImage.print({
-            font,
-            x: 20,
-            y: (textBackgroundHeight - measureTextHeight(font, wrappedText, maxTextWidth)) / 2,
-            text: {
-                text: wrappedText,
-                alignmentX: HorizontalAlign.CENTER,
-            },
-            maxWidth: maxTextWidth,
-        });
-
-        const finalImageHeight = imageHeight + textBackgroundHeight;
-        const finalImage = new Jimp({ width: imageWidth, height: finalImageHeight, color: '#00000059' });
-
-        finalImage
-            .composite(croppedImage, 0, 0)
-            .composite(textImage, 0, imageHeight);
-
-        const outputImageName = `output-${Date.now()}.png`;
+        const page = await browser.newPage();
+        
+        // Set viewport to Facebook optimal dimensions
+        await page.setViewport({ width: 1200, height: 630 });
+        
+        // Set content and wait for images to load
+        await page.setContent(htmlTemplate, { waitUntil: 'networkidle0' });
+        
+        // Take screenshot
+        const outputImageName = `facebook-share-${Date.now()}.png`;
         const outputImagePath = path.join('imgs', outputImageName);
+        
+        await page.screenshot({
+            path: outputImagePath,
+            type: 'png',
+            width: 1200,
+            height: 630
+        });
 
-        await finalImage.write(outputImagePath);
+        await browser.close();
+
         const imageUrl = `https://${req.get('host')}/imgs/${outputImageName}`;
 
         res.status(200).json({
@@ -78,11 +62,12 @@ const getImageWithVerse = catchAsync(async (req, res, next) => {
             imageUrl,
         });
     } catch (err) {
-        console.log(err);
+        console.error('Error generating Facebook share image:', err);
 
         res.status(500).json({
             status: 'failure',
-            data: err
+            message: 'Failed to generate share image',
+            error: err.message
         });
     }
 });

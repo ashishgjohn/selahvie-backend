@@ -1,12 +1,26 @@
 import { escape } from 'html-escaper';  // To prevent XSS attacks
 import catchAsync from "../utils/catchAsync.js";
+import { getImageWithVerse } from './imagesController.js';
 
 const handleShare = catchAsync(async (req, res, next) => {
+    const format = req.query.format;
     const verse = escape(req.query.verse || '');
     const reference = escape(req.query.reference || '');
     const imageUrl = escape(req.query.imageUrl || '');
+    const bgImage = req.query.bgImage || '';
     
-    console.log(verse, reference, imageUrl);
+    console.log('Share request:', { format, verse, reference, imageUrl, bgImage });
+    
+    // If format=image is requested, generate and return image
+    if (format === 'image') {
+        // Transform parameters for image generation
+        req.query.text = verse;
+        req.query.reference = reference;
+        req.query.image = bgImage;
+        
+        // Call the image generation controller
+        return getImageWithVerse(req, res, next);
+    }
     
     // If someone visits directly without parameters
     if (!verse || !reference || !imageUrl) {

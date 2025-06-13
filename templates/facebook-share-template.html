@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook Share Template</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+        }
+        
+        .container {
+            width: 1200px;
+            height: 630px;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        
+        .logo {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 60px;
+            height: 60px;
+            z-index: 10;
+        }
+        
+        .verse-container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin: 0 48px 48px 48px;
+            padding: 32px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .verse-reference {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+        }
+        
+        .verse-text {
+            color: white;
+            font-size: 24px;
+            font-weight: 400;
+            line-height: 1.4;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        @media screen and (max-width: 1200px) {
+            .container {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="background-image: url('{{BACKGROUND_IMAGE}}');">
+        <img src="{{LOGO_URL}}" alt="SelahVie Logo" class="logo" />
+        <div class="verse-container">
+            <div class="verse-reference">{{VERSE_REFERENCE}}</div>
+            <div class="verse-text">{{VERSE_TEXT}}</div>
+        </div>
+    </div>
+</body>
+</html>
