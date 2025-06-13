@@ -22,8 +22,8 @@ const handleShare = catchAsync(async (req, res, next) => {
         return getImageWithVerse(req, res, next);
     }
     
-    // If someone visits directly without parameters
-    if (!verse || !reference || !imageUrl) {
+    // If someone visits directly without parameters (but not for image generation)
+    if (format !== 'image' && (!verse || !reference || !imageUrl)) {
         return res.redirect('https://selahvie.life');
     }
 
