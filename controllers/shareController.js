@@ -27,24 +27,18 @@ const handleShare = catchAsync(async (req, res, next) => {
         return res.redirect('https://selahvie.life');
     }
 
-    // Construct the canonical URL for the og:url tag
-    // req.originalUrl includes the path and query string (e.g., /share?verse=...)
-    const canonicalUrl = `https://selahvie.life${req.originalUrl}`; 
-    // A more dynamic way if your protocol/host might change:
-    // const canonicalUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
-
     // Send the sharing page with Open Graph tags
     res.send(`
         <!DOCTYPE html>
         <html>
         <head>
-            <title>SelahVie - Daily Verse</title>
-            <meta property="og:title" content="Daily Verse | SelahVie" />
-            <meta property="og:description" content="${verse} - ${reference}" />
+            <title>SelahVie</title>
+            <meta property="og:title" content="SelahVie" />
+            <meta property="og:description" content="A verse for today" />
             <meta property="og:image" content="${imageUrl}" />
-            <meta property="og:url" content="${escape(canonicalUrl)}" />
+            <meta property="og:url" content="https://selahvie.life" />
             <meta property="og:type" content="website" />
-            {/* You might still want the redirect for users, but Facebook should pick up OG tags before redirecting */}
+            <meta property="og:site_name" content="SelahVie" />
             <meta http-equiv="refresh" content="0;url=https://selahvie.life" />
         </head>
         <body>
