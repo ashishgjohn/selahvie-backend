@@ -42,11 +42,10 @@ const handleShare = catchAsync(async (req, res, next) => {
             <meta property="og:url" content="${escape(currentShareUrl)}" />
             <meta property="og:type" content="website" />
             <meta property="og:site_name" content="SelahVie" />
-            <meta http-equiv="refresh" content="0;url=https://selahvie.life" />
         </head>
         <body>
-            <p>Redirecting to SelahVie...</p>
-            <p>If you are not redirected, <a href="https://selahvie.life">click here</a>.</p>
+            <p>SelahVie - A verse for today</p>
+            <p><a href="https://selahvie.life">Visit SelahVie</a></p>
         </body>
         </html>
     `);
