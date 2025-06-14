@@ -46,6 +46,12 @@ const handleShare = catchAsync(async (req, res, next) => {
         <body>
             <p>SelahVie - A verse for today</p>
             <p><a href="https://selahvie.life">Visit SelahVie</a></p>
+            <script>
+                // Redirect human users to selahvie.life after 1 second
+                setTimeout(() => {
+                    window.location.href = 'https://selahvie.life';
+                }, 1000);
+            </script>
         </body>
         </html>
     `);
