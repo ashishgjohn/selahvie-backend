@@ -35,9 +35,9 @@ const handleShare = catchAsync(async (req, res, next) => {
         <!DOCTYPE html>
         <html>
         <head>
-            <title>SelahVie</title>
-            <meta property="og:title" content="SelahVie" />
-            <meta property="og:description" content="A verse for today" />
+            <title>Scripture for Your Soul</title>
+            <meta property="og:title" content="Scripture for Your Soul" />
+            <meta property="og:description" content="Pause, reflect, and find hope. Try SelahVie today" />
             <meta property="og:image" content="${imageUrl}" />
             <meta property="og:url" content="${escape(currentShareUrl)}" />
             <meta property="og:type" content="website" />
@@ -47,10 +47,10 @@ const handleShare = catchAsync(async (req, res, next) => {
             <p>SelahVie - A verse for today</p>
             <p><a href="https://selahvie.life">Visit SelahVie</a></p>
             <script>
-                // Redirect human users to selahvie.life after 1 second
+                // Redirect human users to selahvie.life after 0.1 second
                 setTimeout(() => {
                     window.location.href = 'https://selahvie.life';
-                }, 1000);
+                }, 100);
             </script>
         </body>
         </html>
