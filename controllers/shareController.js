@@ -27,6 +27,9 @@ const handleShare = catchAsync(async (req, res, next) => {
         return res.redirect('https://selahvie.life');
     }
 
+    // Construct the current share URL for og:url tag
+    const currentShareUrl = `https://${req.get('host')}${req.originalUrl}`;
+    
     // Send the sharing page with Open Graph tags
     res.send(`
         <!DOCTYPE html>
@@ -36,7 +39,7 @@ const handleShare = catchAsync(async (req, res, next) => {
             <meta property="og:title" content="SelahVie" />
             <meta property="og:description" content="A verse for today" />
             <meta property="og:image" content="${imageUrl}" />
-            <meta property="og:url" content="https://selahvie.life" />
+            <meta property="og:url" content="${escape(currentShareUrl)}" />
             <meta property="og:type" content="website" />
             <meta property="og:site_name" content="SelahVie" />
             <meta http-equiv="refresh" content="0;url=https://selahvie.life" />
