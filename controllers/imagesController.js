@@ -3,6 +3,18 @@ import path from 'path';
 import fs from 'fs/promises';
 import puppeteer from 'puppeteer';
 
+let browserInstance = null;
+
+async function getBrowser() {
+    if (!browserInstance || !browserInstance.connected) {
+        browserInstance = await puppeteer.launch({
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
+    }
+    return browserInstance;
+}
+
 // Function to clean up old generated images
 async function cleanupOldImages() {
     try {
@@ -13,7 +25,7 @@ async function cleanupOldImages() {
         
         for (const file of files) {
             // Only delete facebook-share generated images
-            if (file.startsWith('facebook-share-') && file.endsWith('.png')) {
+            if (file.startsWith('facebook-share-') && (file.endsWith('.png') || file.endsWith('.jpg'))) {
                 const filePath = path.join(imgsDir, file);
                 const stats = await fs.stat(filePath);
                 
@@ -57,32 +69,23 @@ const getImageWithVerse = catchAsync(async (req, res, next) => {
             .replace('{{VERSE_REFERENCE}}', verseReference || '')
             .replace('{{VERSE_TEXT}}', verseText);
 
-        // Launch Puppeteer and generate screenshot
-        const browser = await puppeteer.launch({
-            headless: true,
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
-        });
-
+        const browser = await getBrowser();
         const page = await browser.newPage();
-        
-        // Set viewport to Facebook optimal dimensions
+
         await page.setViewport({ width: 1200, height: 630 });
-        
-        // Set content and wait for images to load
-        await page.setContent(htmlTemplate, { waitUntil: 'networkidle0' });
-        
-        // Take screenshot
-        const outputImageName = `facebook-share-${Date.now()}.png`;
+        await page.setContent(htmlTemplate, { waitUntil: 'networkidle2' });
+
+        const outputImageName = `facebook-share-${Date.now()}.jpg`;
         const outputImagePath = path.join('imgs', outputImageName);
-        
+
         await page.screenshot({
             path: outputImagePath,
-            type: 'png',
-            width: 1200,
-            height: 630
+            type: 'jpeg',
+            quality: 90,
+            clip: { x: 0, y: 0, width: 1200, height: 630 }
         });
 
-        await browser.close();
+        await page.close();
 
         const imageUrl = `https://${req.get('host')}/imgs/${outputImageName}`;
 
