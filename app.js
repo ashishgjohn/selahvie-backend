@@ -10,13 +10,13 @@ import path from 'path';
 const app = express();
 
 const allowedOrigins = [
-    'https://selahvie.life', // Your main app
-    'https://api.selahvie.life' // Your backend, if accessed directly
+    'https://selahvie.life',
+    'https://api.selahvie.life',
+    'chrome-extension://pfhbgcocdbpplkacchpekhcdempaphlj', // dev unpacked extension
 ];
 
 app.use(cors({
     origin: function (origin, callback) {
-        // Allow requests with no origin (e.g., mobile apps, Postman) or check against allowed origins
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
