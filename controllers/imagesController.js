@@ -41,10 +41,19 @@ async function cleanupOldImages() {
     }
 }
 
+function escapeHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#x27;');
+}
+
 const getImageWithVerse = catchAsync(async (req, res, next) => {
     try {
         const { text: verseText, reference: verseReference, image: bgImage } = req.query;
-        
+
         if (!verseText || !bgImage) {
             return res.status(400).json({
                 status: 'failure',
@@ -64,10 +73,10 @@ const getImageWithVerse = catchAsync(async (req, res, next) => {
         const logoUrl = `https://${req.get('host')}/imgs/SelahVieLogoWhite.webp`;
         
         htmlTemplate = htmlTemplate
-            .replace('{{BACKGROUND_IMAGE}}', backgroundImageUrl)
-            .replace('{{LOGO_URL}}', logoUrl)
-            .replace('{{VERSE_REFERENCE}}', verseReference || '')
-            .replace('{{VERSE_TEXT}}', verseText);
+            .replace('{{BACKGROUND_IMAGE}}', escapeHtml(backgroundImageUrl))
+            .replace('{{LOGO_URL}}', escapeHtml(logoUrl))
+            .replace('{{VERSE_REFERENCE}}', escapeHtml(verseReference || ''))
+            .replace('{{VERSE_TEXT}}', escapeHtml(verseText));
 
         const browser = await getBrowser();
         const page = await browser.newPage();

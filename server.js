@@ -10,9 +10,6 @@ const PORT = process.env.PORT;
 
 mongoose.connect(DB, {
     dbName: DBNAME,
-    ssl: true,
-    tls: true,
-    tlsAllowInvalidCertificates: true  // Only temporarily while we debug
 }).then(() => {
     console.log(`${DBNAME} database connected!`);
 }).catch((err) => {

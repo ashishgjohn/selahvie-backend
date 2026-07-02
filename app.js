@@ -4,10 +4,23 @@ import { router as imagesRouter } from './routes/imagesRoute.js';
 import { router as randomImageRouter } from './routes/randomImageRoute.js';
 import { router as shareRouter } from './routes/shareRoute.js';
 import cors from 'cors';
+import rateLimit from 'express-rate-limit';
+import morgan from 'morgan';
 import AppError from "./utils/appError.js";
 import path from 'path';
 
 const app = express();
+
+app.use(morgan('combined'));
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { status: 'error', message: 'Too many requests, please try again later.' }
+});
+app.use('/api/', limiter);
 
 const allowedOrigins = [
     'https://selahvie.life',
