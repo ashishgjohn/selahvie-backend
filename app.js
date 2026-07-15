@@ -24,8 +24,7 @@ app.use('/api/', limiter);
 
 const allowedOrigins = [
     'https://selahvie.life',
-    'https://api.selahvie.life',
-    'chrome-extension://pfhbgcocdbpplkacchpekhcdempaphlj', // dev unpacked extension
+    'chrome-extension://pfhbgcocdbpplkacchpekhcdempaphlj',
 ];
 
 app.use(cors({
@@ -47,14 +46,6 @@ app.use('/api/images', imagesRouter);
 app.use('/api/random', randomImageRouter);
 app.use('/api/share', shareRouter);
 app.use('/imgs', express.static(path.join('imgs')));
-
-app.use('/', (req, res, next) => {
-    res.status(200).json({
-        status: 'success',
-        data: 'This is the API for Selahvie'
-    });
-});
-
 
 app.all("*", (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on the server.`, '404'));
