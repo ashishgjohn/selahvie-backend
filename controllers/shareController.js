@@ -7,7 +7,7 @@ const handleShare = catchAsync(async (req, res, next) => {
     const verse = escape(req.query.verse || '');
     const reference = escape(req.query.reference || '');
     const imageUrl = escape(req.query.imageUrl || '');
-    const bgImage = req.query.bgImage || '';
+    const bgImage = escape(req.query.bgImage || '');
     
     console.log('Share request:', { format, verse, reference, imageUrl, bgImage });
     

@@ -15,6 +15,10 @@ const getAllVerses = catchAsync(async (req, res, next) => {
 
 const getVersesWithScore = catchAsync(async (req, res, next) => {
     const { score } = req.params;
+    const parsedScore = Number(score);
+    if (isNaN(parsedScore) || parsedScore < -10 || parsedScore > 10) {
+        return res.status(400).json({ status: 'error', message: 'Invalid score. Must be a number between -10 and 10.' });
+    }
     const verses = await Verse.find({
         $and: [
             {

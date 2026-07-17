@@ -108,7 +108,6 @@ const getImageWithVerse = catchAsync(async (req, res, next) => {
         res.status(500).json({
             status: 'failure',
             message: 'Failed to generate share image',
-            error: err.message
         });
     }
 });
