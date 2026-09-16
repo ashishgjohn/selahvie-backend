@@ -8,9 +8,7 @@ const handleShare = catchAsync(async (req, res, next) => {
     const reference = escape(req.query.reference || '');
     const imageUrl = escape(req.query.imageUrl || '');
     const bgImage = escape(req.query.bgImage || '');
-    
-    console.log('Share request:', { format, verse, reference, imageUrl, bgImage });
-    
+
     // If format=image is requested, generate and return image
     if (format === 'image') {
         // Transform parameters for image generation

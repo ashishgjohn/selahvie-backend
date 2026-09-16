@@ -38,24 +38,13 @@ const getVersesWithScore = catchAsync(async (req, res, next) => {
         name: `${baseUrl}/imgs/bgs/${images[0].name}`,
     };
 
-    console.log('Looking for verses with score range:', Number(score) - 2, 'to', Number(score) + 2, 'verses', verses);
-
-    console.log('images', images, 'baseurl', baseUrl, 'imagewithurl', imageWithUrl);
-
     res.status(200).json({
         status: 'success',
         data: {
             verses,
-            images: [imageWithUrl]  // Now 'images' is defined with actual data and sent as an array
+            images: [imageWithUrl]
         }
     });
-
-    //res.status(200).json({
-    //    status: 'success',
-    //    data: {
-    //        images
-    //    }
-    //});
 });
 
 export { getAllVerses, getVersesWithScore };
