@@ -1,6 +1,7 @@
 import Verse from "../models/verseModel.js";
 import Image from "../models/imageModel.js";
 import catchAsync from "../utils/catchAsync.js";
+import logEvent from "../utils/logEvent.js";
 
 const getAllVerses = catchAsync(async (req, res, next) => {
     const verses = await Verse.find();
@@ -37,6 +38,9 @@ const getVersesWithScore = catchAsync(async (req, res, next) => {
         ...images[0],
         name: `${baseUrl}/imgs/bgs/${images[0].name}`,
     };
+
+    // Record this verse view for usage analytics (non-blocking).
+    logEvent({ type: 'verse_view', moodScore: parsedScore });
 
     res.status(200).json({
         status: 'success',

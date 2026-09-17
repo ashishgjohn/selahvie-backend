@@ -1,6 +1,7 @@
 import { escape } from 'html-escaper';  // To prevent XSS attacks
 import catchAsync from "../utils/catchAsync.js";
 import { getImageWithVerse } from './imagesController.js';
+import logEvent from "../utils/logEvent.js";
 
 const handleShare = catchAsync(async (req, res, next) => {
     const format = req.query.format;
@@ -11,6 +12,9 @@ const handleShare = catchAsync(async (req, res, next) => {
 
     // If format=image is requested, generate and return image
     if (format === 'image') {
+        // Record this share for usage analytics (non-blocking).
+        logEvent({ type: 'share' });
+
         // Transform parameters for image generation
         req.query.text = verse;
         req.query.reference = reference;
