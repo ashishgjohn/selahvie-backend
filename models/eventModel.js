@@ -11,7 +11,10 @@ const eventSchema = new mongoose.Schema({
         type: Number            // -10..10, when the action involves a mood
     },
     anonymousId: {
-        type: String            // optional stable per-user id (added later)
+        type: String            // optional stable per-user id
+    },
+    value: {
+        type: String            // optional extra detail, e.g. which button was clicked or 'install'/'update'
     },
     createdAt: {
         type: Date,

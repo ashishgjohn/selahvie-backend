@@ -40,7 +40,8 @@ const getVersesWithScore = catchAsync(async (req, res, next) => {
     };
 
     // Record this verse view for usage analytics (non-blocking).
-    logEvent({ type: 'verse_view', moodScore: parsedScore });
+    const anonymousId = typeof req.query.aid === 'string' ? req.query.aid.slice(0, 64) : undefined;
+    logEvent({ type: 'verse_view', moodScore: parsedScore, anonymousId });
 
     res.status(200).json({
         status: 'success',

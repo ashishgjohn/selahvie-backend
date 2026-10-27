@@ -3,6 +3,7 @@ import { router as versesRouter } from './routes/versesRoute.js';
 import { router as imagesRouter } from './routes/imagesRoute.js';
 import { router as randomImageRouter } from './routes/randomImageRoute.js';
 import { router as shareRouter } from './routes/shareRoute.js';
+import { router as eventsRouter } from './routes/eventsRoute.js';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import morgan from 'morgan';
@@ -22,6 +23,8 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
+const isProduction = (process.env.NODE_ENV ?? '').toLowerCase() === 'production';
+
 const allowedOrigins = [
     'https://selahvie.life',
     'chrome-extension://pfhbgcocdbpplkacchpekhcdempaphlj',
@@ -29,7 +32,10 @@ const allowedOrigins = [
 
 app.use(cors({
     origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
+        // In development (local testing) allow any origin, so an unpacked
+        // dev build of the extension — which has a different id each load —
+        // can reach the local server. Production keeps the strict whitelist.
+        if (!isProduction || !origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
@@ -45,6 +51,7 @@ app.use('/api/verses', versesRouter);
 app.use('/api/images', imagesRouter);
 app.use('/api/random', randomImageRouter);
 app.use('/api/share', shareRouter);
+app.use('/api/events', eventsRouter);
 app.use('/imgs', express.static(path.join('imgs')));
 
 app.all("*", (req, res, next) => {
