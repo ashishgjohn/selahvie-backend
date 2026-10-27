@@ -69,8 +69,8 @@ const getImageWithVerse = catchAsync(async (req, res, next) => {
         cleanupOldImages();
         
         // Replace placeholders with actual data
-        const backgroundImageUrl = `https://${req.get('host')}/imgs/bgs/${bgImage}`;
-        const logoUrl = `https://${req.get('host')}/imgs/SelahVieLogoWhite.webp`;
+        const backgroundImageUrl = `${(process.env.NODE_ENV||'').toLowerCase()==='production'?'https':req.protocol}://${req.get('host')}/imgs/bgs/${bgImage}`;
+        const logoUrl = `${(process.env.NODE_ENV||'').toLowerCase()==='production'?'https':req.protocol}://${req.get('host')}/imgs/SelahVieLogoWhite.webp`;
         
         htmlTemplate = htmlTemplate
             .replace('{{BACKGROUND_IMAGE}}', escapeHtml(backgroundImageUrl))
@@ -96,7 +96,7 @@ const getImageWithVerse = catchAsync(async (req, res, next) => {
 
         await page.close();
 
-        const imageUrl = `https://${req.get('host')}/imgs/${outputImageName}`;
+        const imageUrl = `${(process.env.NODE_ENV||'').toLowerCase()==='production'?'https':req.protocol}://${req.get('host')}/imgs/${outputImageName}`;
 
         res.status(200).json({
             status: 'success',

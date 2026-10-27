@@ -3,7 +3,7 @@ import catchAsync from "../utils/catchAsync.js";
 
 const getRandomImage = catchAsync(async (req, res, next) => {
     const images = await Image.aggregate([{ $sample: { size: 1 } }]);
-    const baseUrl = `https://${req.get('host')}`;
+    const baseUrl = `${(process.env.NODE_ENV||'').toLowerCase()==='production'?'https':req.protocol}://${req.get('host')}`;
     const imageWithUrl = {
         ...images[0],
         name: `${baseUrl}/imgs/bgs/${images[0].name}`,
