@@ -9,6 +9,7 @@ import rateLimit from 'express-rate-limit';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import AppError from "./utils/appError.js";
+import globalErrorHandler from "./utils/errorController.js";
 import path from 'path';
 
 const app = express();
@@ -43,7 +44,7 @@ app.use(cors({
         if (!isProduction || !origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
-            callback(new Error('Not allowed by CORS'));
+            callback(new AppError('Not allowed by CORS', 403));
         }
     },
     methods: ['GET', 'POST'], // Only allow these HTTP methods
@@ -62,7 +63,9 @@ app.use('/imgs', express.static(path.join('imgs')));
 app.get('/healthz', (req, res) => res.json({ status: 'ok' }));
 
 app.all("*", (req, res, next) => {
-    next(new AppError(`Can't find ${req.originalUrl} on the server.`, '404'));
+    next(new AppError(`Can't find ${req.originalUrl} on the server.`, 404));
 });
+
+app.use(globalErrorHandler);
 
 export { app };
