@@ -1,7 +1,8 @@
 const isProduction = () => (process.env.NODE_ENV ?? '').toLowerCase() === 'production';
 
 export default (err, req, res, next) => {
-    const num = v => (Number.isInteger(v) ? v : undefined);
+    if (res.headersSent) return next(err);
+    const num = v => (Number.isInteger(v) && v >= 400 && v <= 599 ? v : undefined);
     const statusCode = num(err.statusCode) ?? num(err.status) ?? 500;
 
     if (statusCode >= 500) console.error(err);

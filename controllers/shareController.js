@@ -26,10 +26,13 @@ const handleShare = catchAsync(async (req, res, next) => {
     
     // imageUrl must be on this server's own host (checked on the raw value, before escaping)
     let imageHostOk = false;
-    try { imageHostOk = new URL(req.query.imageUrl).host === req.get('host'); } catch {}
+    try {
+        const u = new URL(req.query.imageUrl);
+        imageHostOk = ['http:', 'https:'].includes(u.protocol) && u.host === req.get('host') && u.pathname.startsWith('/imgs/');
+    } catch {}
 
     // If someone visits directly without parameters (but not for image generation)
-    if (format !== 'image' && (!verse || !reference || !imageUrl || !imageHostOk)) {
+    if (!verse || !reference || !imageHostOk) {
         return res.redirect('https://selahvie.life');
     }
 
