@@ -3,3 +3,8 @@ imgs/dump
 
 #  Files
 .env
+# Private planning docs (not for the public repo)
+BUILD_TRACKER.md
+MOBILE_APP_PLAN.md
+MOBILE_BUILD_SPEC.md
+build-spec/
