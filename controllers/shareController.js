@@ -28,7 +28,7 @@ const handleShare = catchAsync(async (req, res, next) => {
     let imageHostOk = false;
     try {
         const u = new URL(req.query.imageUrl);
-        imageHostOk = ['http:', 'https:'].includes(u.protocol) && u.host === req.get('host') && u.pathname.startsWith('/imgs/');
+        imageHostOk = ['http:', 'https:'].includes(u.protocol) && u.host === req.get('host') && u.pathname.startsWith('/imgs/') && !u.username && !u.password;
     } catch {}
 
     // If someone visits directly without parameters (but not for image generation)
