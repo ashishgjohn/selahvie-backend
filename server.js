@@ -11,7 +11,9 @@ const DB = process.env.DATABASE ?? '';
 const DBNAME = isProd
     ? (process.env.DATABASE_NAME ?? '')
     : (process.env.DATABASE_NAME_DEV ?? `${process.env.DATABASE_NAME ?? 'SelahVie'}_dev`);
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
+
+process.on('unhandledRejection', err => console.error('Unhandled rejection:', err));
 
 mongoose.connect(DB, {
     dbName: DBNAME,

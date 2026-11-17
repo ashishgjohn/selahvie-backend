@@ -11,6 +11,7 @@ import AppError from "./utils/appError.js";
 import path from 'path';
 
 const app = express();
+app.set('trust proxy', 1);
 
 app.use(morgan('combined'));
 
@@ -54,6 +55,8 @@ app.use('/api/random', randomImageRouter);
 app.use('/api/share', shareRouter);
 app.use('/api/events', eventsRouter);
 app.use('/imgs', express.static(path.join('imgs')));
+
+app.get('/healthz', (req, res) => res.json({ status: 'ok' }));
 
 app.all("*", (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on the server.`, '404'));
