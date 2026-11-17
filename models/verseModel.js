@@ -15,5 +15,7 @@ const verseSchema = new mongoose.Schema({
     }
 });
 
+verseSchema.index({ score: 1 });
+
 const Verse = mongoose.model('Verse', verseSchema);
 export default Verse;

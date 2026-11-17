@@ -34,9 +34,10 @@ const getVersesWithScore = catchAsync(async (req, res, next) => {
     // Get a random image using the same method as randomImageController
     const images = await Image.aggregate([{ $sample: { size: 1 } }]);
     const baseUrl = `${(process.env.NODE_ENV||'').toLowerCase()==='production'?'https':req.protocol}://${req.get('host')}`;
+    const img = images[0] ?? { name: 'img0.jpg' };
     const imageWithUrl = {
-        ...images[0],
-        name: `${baseUrl}/imgs/bgs/${images[0].name}`,
+        ...img,
+        name: `${baseUrl}/imgs/bgs/${img.name}`,
     };
 
     // Record this verse view for usage analytics (non-blocking).

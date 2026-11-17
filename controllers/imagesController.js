@@ -54,7 +54,7 @@ const getImageWithVerse = catchAsync(async (req, res, next) => {
     try {
         const { text: verseText, reference: verseReference, image: bgImage } = req.query;
 
-        if (!verseText || !bgImage) {
+        if (!verseText || !bgImage || !/^img\d{1,3}\.jpg$/.test(bgImage)) {
             return res.status(400).json({
                 status: 'failure',
                 message: 'Missing required parameters: text and image'
