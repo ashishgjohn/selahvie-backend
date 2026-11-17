@@ -7,6 +7,7 @@ import { router as eventsRouter } from './routes/eventsRoute.js';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import morgan from 'morgan';
+import helmet from 'helmet';
 import AppError from "./utils/appError.js";
 import path from 'path';
 
@@ -14,6 +15,8 @@ const app = express();
 app.set('trust proxy', 1);
 
 app.use(morgan('combined'));
+
+app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' }, crossOriginOpenerPolicy: false, contentSecurityPolicy: false, hsts: { maxAge: 15552000, includeSubDomains: false } }));
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
