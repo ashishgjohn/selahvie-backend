@@ -6,7 +6,7 @@ const base = (process.argv[2] ?? '').replace(/\/$/, '');
 if (!/^https?:\/\//.test(base)) {
   console.log('Usage: npm run erc -- <baseUrl> [--strict-cors]'); process.exit(2);
 }
-const EXT = 'chrome-extension://pfhbgcocdbpplkacchpekhcdempaphlj';
+const EXT = 'chrome-extension://aklalifneejaieahplekciiohacpinib';
 const JSON_HDR = { Accept: 'application/json' };
 const origin = new URL(base).origin;
 // Strict CORS is the default for any non-local host (dev servers are permissive on purpose).

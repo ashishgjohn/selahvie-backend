@@ -1,8 +1,6 @@
-import { configDotenv } from "dotenv";
+import 'dotenv/config';
 import mongoose from "mongoose";
 import { app } from "./app.js";
-
-configDotenv();
 
 // Pick the database based on the environment.
 // On your laptop (NODE_ENV=DEVELOPMENT) -> safe practice database.

@@ -28,6 +28,7 @@ const isProduction = (process.env.NODE_ENV ?? '').toLowerCase() === 'production'
 const allowedOrigins = [
     'https://selahvie.life',
     'chrome-extension://pfhbgcocdbpplkacchpekhcdempaphlj',
+    'chrome-extension://aklalifneejaieahplekciiohacpinib',
 ];
 
 app.use(cors({
