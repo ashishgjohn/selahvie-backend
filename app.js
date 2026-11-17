@@ -47,7 +47,7 @@ app.use(cors({
             callback(new AppError('Not allowed by CORS', 403));
         }
     },
-    methods: ['GET', 'POST'], // Only allow these HTTP methods
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true // Allow credentials (e.g., cookies, Authorization headers)
 }));
 
